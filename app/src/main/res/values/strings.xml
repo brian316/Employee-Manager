@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">Manager App</string>
     <string name="action_settings">Settings</string>
+
+    <string-array name="employee_actions">
+        <item>Add</item>
+        <item>Delete</item>
+        <item>Update</item>
+    </string-array>
 </resources>

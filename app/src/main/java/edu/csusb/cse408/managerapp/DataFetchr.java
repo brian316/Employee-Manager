@@ -36,8 +36,38 @@ public class DataFetchr {
     //Android Emulator Networking https://developer.android.com/studio/run/emulator-networking
     private static final String SERVER = "http://10.0.2.2:5000";
 
-    // Example of the insert function
-// as a function in the DataFechr class
+    public int update(String id, String dept){
+        int statusCode = 0;
+        HttpURLConnection connection = null;
+        try{
+            String updateurl = Uri.parse(SERVER)
+                    .buildUpon()
+                    .appendPath("employee")
+                    .appendPath(id)
+                    .build().toString();
+            URL url = new URL(updateurl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("PUT");
+            connection.setRequestProperty("Content-Type", "application/json");
+            JSONObject jsonpara = new JSONObject();
+            jsonpara.put("id", id)
+                    .put("department", dept);
+            DataOutputStream os = new DataOutputStream(connection.getOutputStream());
+            os.writeBytes(jsonpara.toString());
+            os.flush();
+            os.close();
+
+            statusCode = connection.getResponseCode();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            connection.disconnect();
+        }
+
+        return statusCode;
+    }
 
     public int insert(String name, String id, String dept, String title){
         int statusCode = 0;
@@ -123,9 +153,11 @@ public class DataFetchr {
             }
 
         } catch (IOException ioe) {
-            Log.e(TAG, "Failed to fetch items", ioe);
+            Log.i(TAG, "Failed to fetch items", ioe);
+            return new ArrayList<>();
         } catch (JSONException je) {
-            Log.e(TAG, "Failed to parse JSON", je);
+            Log.i(TAG, "Failed to parse JSON", je);
+            return new ArrayList<>();
         }
         Log.i(TAG,items.toString());
         return items;
