@@ -40,9 +40,8 @@ public class DataFetchr {
 // as a function in the DataFechr class
 
     public int insert(String name, String id, String dept, String title){
-        int code = 0;
+        int statusCode = 0;
         HttpURLConnection connection = null;
-        StringBuilder result = new StringBuilder();
         try {
             String inserturl = Uri.parse(SERVER)
                     .buildUpon()
@@ -62,14 +61,7 @@ public class DataFetchr {
             os.flush();
             os.close();
 
-//            InputStream in = new BufferedInputStream(connection.getInputStream());
-//            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-//            String line;
-//            while ((line = reader.readLine())!= null){
-//                result.append(line).append('\n');
-//            }
-
-            code = connection.getResponseCode();
+            statusCode = connection.getResponseCode();
         }
         catch (Exception e){
             e.printStackTrace();
@@ -77,8 +69,7 @@ public class DataFetchr {
         finally {
             connection.disconnect();
         }
-//        return result.toString();
-        return code;
+        return statusCode;
     }
 
     /**
