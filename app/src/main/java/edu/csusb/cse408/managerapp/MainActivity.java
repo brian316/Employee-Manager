@@ -1,5 +1,7 @@
 package edu.csusb.cse408.managerapp;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -23,26 +25,48 @@ import java.util.Iterator;
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
+    String action;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+        Bundle bundle = this.getIntent().getExtras();
+        if(bundle != null){
+            action = bundle.getString("action");
+            if(action.equals("delete")) {
+                Snackbar.make(findViewById(R.id.main), "User Deleted!", Snackbar.LENGTH_LONG).show();
+            }
+            if(action.equals("add")){
+                Snackbar.make(findViewById(R.id.main), "User Added!", Snackbar.LENGTH_LONG).show();
+            }
+        }
+
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+                makeUser();
+//                DeleteItemsTask delItem = new DeleteItemsTask("001", view);
+//                delItem.execute();
+//                new FetchItemsTask().execute();
             }
         });
 
         listView = findViewById(R.id.listview);
         new FetchItemsTask().execute();
 
+    }
+
+    public void makeUser(){
+        Intent userActivity = new Intent(this, UserActivity.class);
+        startActivity(userActivity);
     }
 
     /**
@@ -63,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
             Iterator<String> iter = strings.iterator();
             while(iter.hasNext()){
                 String obj = iter.next();
-                if (obj.contains("005")){
+                if (obj.contains("001")){
                     Log.i("TestFetcher", "005: IN LIST!");
                 } else{
                     Log.i("TestFetcher", "005: NOT IN LIST!");
@@ -72,6 +96,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -94,4 +119,6 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

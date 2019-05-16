@@ -9,12 +9,11 @@
     tools:context="edu.csusb.cse408.managerapp.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:id="@+id/textview"
-        android:layout_width="wrap_content"
+    <EditText
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World!" />
-
+        android:id="@+id/searchuser"
+        android:hint="Search for user"/>
     <ListView
         android:id="@+id/listview"
         android:layout_width="match_parent"

@@ -7,11 +7,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -30,6 +35,51 @@ public class DataFetchr {
     //Read more on:
     //Android Emulator Networking https://developer.android.com/studio/run/emulator-networking
     private static final String SERVER = "http://10.0.2.2:5000";
+
+    // Example of the insert function
+// as a function in the DataFechr class
+
+    public int insert(String name, String id, String dept, String title){
+        int code = 0;
+        HttpURLConnection connection = null;
+        StringBuilder result = new StringBuilder();
+        try {
+            String inserturl = Uri.parse(SERVER)
+                    .buildUpon()
+                    .appendPath("employee")
+                    .build().toString();
+            URL url = new URL(inserturl);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            JSONObject jsonpara = new JSONObject();
+            jsonpara.put("name", name)
+                    .put("id", id)
+                    .put("title", title)
+                    .put("department", dept);
+            DataOutputStream os = new DataOutputStream(connection.getOutputStream());
+            os.writeBytes(jsonpara.toString());
+            os.flush();
+            os.close();
+
+//            InputStream in = new BufferedInputStream(connection.getInputStream());
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+//            String line;
+//            while ((line = reader.readLine())!= null){
+//                result.append(line).append('\n');
+//            }
+
+            code = connection.getResponseCode();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        finally {
+            connection.disconnect();
+        }
+//        return result.toString();
+        return code;
+    }
 
     /**
      * request HTTP GET method by url
@@ -97,7 +147,7 @@ public class DataFetchr {
      * @return
      * @throws IOException
      */
-    public String delete(String id) throws IOException {
+    public int delete(String id) throws IOException {
         String delurl = Uri.parse(SERVER)
                 .buildUpon()
                 .appendPath("employee")
@@ -106,6 +156,10 @@ public class DataFetchr {
         URL url = new URL(delurl);
         HttpURLConnection connection = (HttpURLConnection)url.openConnection();
         connection.setRequestMethod("DELETE");
+
+        // BRIAN added
+        int statusCode = connection.getResponseCode();
+
         StringBuilder temp = new StringBuilder();
 
         try {
@@ -119,6 +173,7 @@ public class DataFetchr {
         } finally {
             connection.disconnect();
         }
-        return temp.toString();
+        //return temp.toString();
+        return statusCode;
     }
 }
