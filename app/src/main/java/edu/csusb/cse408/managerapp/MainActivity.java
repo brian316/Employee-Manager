@@ -26,11 +26,11 @@ import java.util.Iterator;
 public class MainActivity extends AppCompatActivity {
 
     ListView listView;
-    String action;
+    ListView searchArray;
     EditText search;
+    String action;
 
     SwipeRefreshLayout swipe;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
                 Snackbar.make(findViewById(R.id.main), "User Updated!", Snackbar.LENGTH_LONG).show();
             }
         }
+
+        // search for a user when text is changed
         search = findViewById(R.id.searchuser);
         search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -69,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // pull to refresh logic
         swipe = findViewById(R.id.refresh);
         swipe.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -78,9 +81,11 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // menu
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // button to take user to new UserActivity Activity
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,29 +94,42 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // This is the array adapter layout to display
         listView = findViewById(R.id.listview);
+        // This is the array adapter layout to search (VISIBILITY=HIDDEN)
+        searchArray = findViewById(R.id.listviewCopy);
         getData();
 
     }
+
+    /**
+     * Fetch data from servers
+     */
     public void getData(){
         new FetchItemsTask().execute();
     }
 
+    /**
+     * Constructs a new array list for listView adapter from searchArray.
+     * searchArray is a copy of listView with a different resource value
+     * from 'content_main' layout that is hidden from GUI
+     */
     public void finder(){
-        int items = listView.getAdapter().getCount();
+        int items = searchArray.getAdapter().getCount();
         ArrayList<String> strings = new ArrayList<String>();
         for(int i = 0; i < items; i++){
-            if(listView.getAdapter().getItem(i).toString().contains(search.getText().toString())){
-                strings.add(listView.getAdapter().getItem(i).toString());
+            if(searchArray.getAdapter().getItem(i).toString().contains(search.getText().toString())){
+                strings.add(searchArray.getAdapter().getItem(i).toString());
             }
         }
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, strings);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(),
+                android.R.layout.simple_list_item_1, strings);
         listView.setAdapter(adapter);
     }
 
-    public void msg(String msg){
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
-    }
+    /**
+     * Creates intent activity to go to UserActivity. To be used within an onClickListener
+     */
     public void makeUser(){
         Intent userActivity = new Intent(this, UserActivity.class);
         startActivity(userActivity);
@@ -130,22 +148,16 @@ public class MainActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(ArrayList<String> strings) {
             ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), android.R.layout.simple_list_item_1, strings);
+            // add the returned list into the array adapter
             listView.setAdapter(adapter);
 
-            Iterator<String> iter = strings.iterator();
-            while(iter.hasNext()){
-                String obj = iter.next();
-                if (obj.contains("001")){
-                    Log.i("TestFetcher", "005: IN LIST!");
-                } else{
-                    Log.i("TestFetcher", "005: NOT IN LIST!");
-                }
-                Log.i("TestFetcher", obj);
-            }
+            // copy of Array adapter
+            searchArray.setAdapter(adapter);
+
+            //end refresh animation
             swipe.setRefreshing(false);
         }
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,9 +177,6 @@ public class MainActivity extends AppCompatActivity {
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
 }

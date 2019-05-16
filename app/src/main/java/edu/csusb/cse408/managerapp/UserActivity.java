@@ -29,8 +29,11 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
 
     Button next;
 
+    // Using this to pass the MainActivity view context to Task classes.
+    // This is used to close the virtual keyboard
     Context context;
 
+    // keeping track of spinner class option
     int option = 0;
 
     @Override
@@ -52,7 +55,6 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         // Can also call a 'new OnItemClickListener' instead of 'this' but this is prob better
         spinner.setOnItemSelectedListener(this);
 
-
         // Get ids of views
         name = findViewById(R.id.name);
         id = findViewById(R.id.id);
@@ -66,9 +68,12 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
                 action(view);
             }
         });
-
     }
 
+    /**
+     * Action to perform based on spinner option chosen
+     * @param view sending current view to Task classes
+     */
     private void action(View view) {
         if(this.option == 0){
             do_add(view);
@@ -81,10 +86,18 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Delete function for DeleteItemsTask class
+     * @param view sending current view to Task classes
+     */
     public void do_delete(View view){
         new DeleteItemsTask(id.getText().toString(), view,context).execute();
     }
 
+    /**
+     * Add function for InsertItemsTask class
+     * @param view sending current view to Task classes
+     */
     public void do_add(View view){
         String n = name.getText().toString();
         String i = id.getText().toString();
@@ -94,6 +107,7 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         if(!n.isEmpty() && !i.isEmpty() && !d.isEmpty() && !t.isEmpty()) {
             new InsertItemsTask(n, i, d, t, view, context).execute();
         }else{
+            // Virtual keyboard reference
             InputMethodManager imm = (InputMethodManager) context.getSystemService(INPUT_METHOD_SERVICE);
             // Hide keyboard
             imm.hideSoftInputFromWindow(view.getWindowToken(),0);
@@ -102,13 +116,19 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Update function for UpdateItemsTask class
+     * @param view view sending current view to Task classes
+     */
     public void do_update(View view){
         String id = this.id.getText().toString();
         String dept = this.dept.getText().toString();
         new UpdateItemsTask(id, dept, view).execute();
     }
 
-    // spinner implementation
+    /**
+     * Spinner implementation
+     */
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
 

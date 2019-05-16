@@ -24,9 +24,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
- * Example to interact with Employee Management Web Server
- * TODO: add the rest of CRUD functions, i.e., insert, update, search
- *
+ * Class to interact with Employee Management Web Server
  */
 
 public class DataFetchr {
@@ -36,6 +34,12 @@ public class DataFetchr {
     //Android Emulator Networking https://developer.android.com/studio/run/emulator-networking
     private static final String SERVER = "http://10.0.2.2:5000";
 
+    /**
+     * Request HTTP PUT method by url. Updates an employees department from server
+     * @param id Employee id
+     * @param dept Employee department to update
+     * @return statusCode returns whether a connection was successful
+     */
     public int update(String id, String dept){
         int statusCode = 0;
         HttpURLConnection connection = null;
@@ -69,6 +73,14 @@ public class DataFetchr {
         return statusCode;
     }
 
+    /**
+     * Request HTTP POST method by url. Adds an Employee to server
+     * @param name Employee name
+     * @param id Employee id
+     * @param dept Employee dept
+     * @param title Employee title
+     * @return statusCode returns whether a connection was successful
+     */
     public int insert(String name, String id, String dept, String title){
         int statusCode = 0;
         HttpURLConnection connection = null;
@@ -104,7 +116,7 @@ public class DataFetchr {
 
     /**
      * request HTTP GET method by url
-      * @param urlSpec
+     * @param urlSpec
      * @return
      * @throws IOException
      */
@@ -134,7 +146,7 @@ public class DataFetchr {
 
     /**
      * Parse received JSON string and store them in an ArrayList
-     * @return
+     * @return ArrayList obj of Employee from server
      */
     public ArrayList<String> fetchItems() {
         ArrayList<String> items = new ArrayList<String>();
@@ -166,8 +178,8 @@ public class DataFetchr {
     /**
      * Example of delete
      * Delete employee record by employee id, using HTTP DELETE
-     * @param id
-     * @return
+     * @param id delete a user by id
+     * @return statusCode returns whether a connection was successful
      * @throws IOException
      */
     public int delete(String id) throws IOException {
@@ -196,7 +208,6 @@ public class DataFetchr {
         } finally {
             connection.disconnect();
         }
-        //return temp.toString();
         return statusCode;
     }
 }

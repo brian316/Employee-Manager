@@ -20,4 +20,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- HIDDEN RESOURCE TO BE USED AS COPY FOR SEARCHING AS ARRAY ADAPTER-->
+    <ListView
+        android:id="@+id/listviewCopy"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="invisible"/>
+
 </LinearLayout>
