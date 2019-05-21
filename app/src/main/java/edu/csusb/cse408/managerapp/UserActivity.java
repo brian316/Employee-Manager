@@ -123,7 +123,8 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
     public void do_update(View view){
         String id = this.id.getText().toString();
         String dept = this.dept.getText().toString();
-        new UpdateItemsTask(id, dept, view).execute();
+        String title = this.title.getText().toString();
+        new UpdateItemsTask(id, dept, title, view).execute();
     }
 
     /**
@@ -138,6 +139,7 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
 
         parent.getItemAtPosition(pos);
         // Change menu options based on selection
+        // add menu
         if(pos == 0){
             findViewById(R.id.name).setVisibility(View.VISIBLE);
             findViewById(R.id.id).setVisibility(View.VISIBLE);
@@ -151,6 +153,7 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
             this.option = 0;
 
         }
+        // delete menu
         if(pos == 1){
             findViewById(R.id.name).setVisibility(View.INVISIBLE);
             findViewById(R.id.id).setVisibility(View.VISIBLE);
@@ -163,6 +166,7 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
             findViewById(R.id.title).setVisibility(View.INVISIBLE);
             this.option = 1;
         }
+        // update menu
         if(pos == 2){
             findViewById(R.id.name).setVisibility(View.INVISIBLE);
             findViewById(R.id.id).setVisibility(View.VISIBLE);
@@ -172,7 +176,7 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
             dept.setVisibility(View.VISIBLE);
             dept.setLayoutParams(params);
 
-            findViewById(R.id.title).setVisibility(View.INVISIBLE);
+            findViewById(R.id.title).setVisibility(View.VISIBLE);
             this.option = 2;
         }
 
@@ -189,11 +193,13 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
         public View view;
         public String id;
         public String dept;
+        public String title;
 
-        public UpdateItemsTask(String id, String dept, View view){
+        public UpdateItemsTask(String id, String dept, String title, View view){
             this.view = view;
             this.id = id;
             this.dept = dept;
+            this.title = title;
         }
         @Override
         protected void onPostExecute(Integer statusCode) {
@@ -217,7 +223,7 @@ public class UserActivity extends AppCompatActivity implements AdapterView.OnIte
 
         @Override
         protected Integer doInBackground(Void... voids) {
-            return new DataFetchr().update(this.id,this.dept);
+            return new DataFetchr().update(this.id,this.dept, this.title);
         }
     }
 

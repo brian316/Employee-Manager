@@ -40,7 +40,7 @@ public class DataFetchr {
      * @param dept Employee department to update
      * @return statusCode returns whether a connection was successful
      */
-    public int update(String id, String dept){
+    public int update(String id, String dept, String title){
         int statusCode = 0;
         HttpURLConnection connection = null;
         try{
@@ -55,7 +55,8 @@ public class DataFetchr {
             connection.setRequestProperty("Content-Type", "application/json");
             JSONObject jsonpara = new JSONObject();
             jsonpara.put("id", id)
-                    .put("department", dept);
+                    .put("department", dept)
+                    .put("title", title);
             DataOutputStream os = new DataOutputStream(connection.getOutputStream());
             os.writeBytes(jsonpara.toString());
             os.flush();
