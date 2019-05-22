@@ -40,7 +40,10 @@ def api_get_info(eid):
         data = request.get_json(force=True)
 
         if(eid in employees):
-            employees[eid].set_department(data['department'])
+            if(data['department'] != ''):
+                employees[eid].set_department(data['department'])
+            if(data['title'] != ''):
+                employees[eid].set_title(data['title'])
             return '', 200
         return '', 204
 
@@ -64,4 +67,3 @@ def api_list_and_insert():
 
 if __name__ == '__main__':
     app.run(debug=False, port = 5000)
-
